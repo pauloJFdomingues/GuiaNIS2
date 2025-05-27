@@ -58,10 +58,6 @@ Embora esta aplicação seja um ficheiro HTML autónomo, a sua instalação dire
 
 Para uma integração mais robusta e segura no SharePoint Online, a abordagem recomendada é desenvolver uma *Web Part* personalizada utilizando o **SharePoint Framework (SPFx)**. O SPFx permite a criação de componentes que se integram nativamente e de forma segura com o ambiente do SharePoint.
 
-## Licença
-
-Este projeto é de código aberto e está disponível sob a licença [MIT License](LICENSE).
-
 ---
 
 **Nota:** Esta aplicação é apenas para fins informativos e não constitui aconselhamento jurídico ou profissional. Consulte sempre as autoridades competentes (como o CNCS em Portugal) e aconselhamento especializado para questões de conformidade com a NIS2.
