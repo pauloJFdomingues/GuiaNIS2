@@ -2,6 +2,8 @@
 
 Este repositório contém uma aplicação web interativa de página única (SPA) concebida para facilitar a compreensão e exploração da Diretiva NIS2 (UE 2022/2555) e o seu estado de transposição em Portugal. O objetivo é tornar a informação complexa sobre cibersegurança mais acessível e envolvente para os utilizadores.
 
+site: https://paulojfdomingues.github.io/GuiaNIS2/
+
 ## Descrição
 
 A aplicação "Guia Interativo da Diretiva NIS2 em Portugal" traduz um relatório detalhado sobre a NIS2 num formato web intuitivo. Permite aos utilizadores navegar por diferentes aspetos da diretiva, incluindo o seu contexto, o processo de transposição em Portugal, as entidades abrangidas, os requisitos de segurança, as sanções e os desafios/oportunidades.
