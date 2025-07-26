@@ -1,669 +1,575 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diretiva NIS2 em Portugal: Guia Interativo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Interativo: Adoção da NIS 2 em Portugal</title>
+    <!-- Carregamento do Chart.js para os gráficos da secção "Quem é Afetado" -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices:
-    - Report Info: Transposition Timeline -> Goal: Show current status & future dates -> Viz/Method: HTML/CSS static timeline graphic -> Interaction: Static with clear labels -> Justification: Clear visual of temporal data.
-    - Report Info: Scope Expansion (1k to 7-9k entities) -> Goal: Show magnitude of change -> Viz/Method: Chart.js Bar Chart (Old vs. New) -> Interaction: Static -> Justification: Simple comparison.
-    - Report Info: Entity Classification Criteria (EE/EI, size, sector) -> Goal: Help users self-assess -> Viz/Method: HTML form (dropdowns, radio buttons) + JS logic -> Interaction: User input triggers JS to suggest classification -> Justification: Interactive tool for practical application.
-    - Report Info: Sanction levels (EE/EI fines) -> Goal: Clearly present penalties -> Viz/Method: Dynamic HTML cards updating on button click (EE/EI) -> Interaction: User clicks button, relevant sanction card shown -> Justification: Direct and clear display of financial/other risks.
-    - Report Info: Minimum Security Measures -> Goal: Present detailed requirements accessibly -> Viz/Method: HTML/JS accordion list -> Interaction: Click to expand/collapse details -> Justification: Organizes long list compactly.
-    - Report Info: Incident Notification Deadlines -> Goal: Visualize reporting timeframes -> Viz/Method: HTML/CSS static graphic timeline -> Interaction: Static -> Justification: Clear visual of time constraints.
-    CONFIRMING NO SVG/Mermaid used. All charts via Chart.js (Canvas). Diagrams via HTML/CSS.
-    -->
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
-        @media (min-width: 768px) { .chart-container { height: 350px; } }
-        .nav-link { transition: color 0.3s ease, border-bottom-color 0.3s ease; }
-        .nav-link:hover, .nav-link.active { color: #0ea5e9; border-bottom-color: #0ea5e9; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .timeline { display: flex; flex-direction: column; position: relative; margin: 20px 0; }
-        .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background-color: #cbd5e1; }
-        .timeline-item { display: flex; margin-bottom: 20px; position: relative; }
-        .timeline-dot { width: 16px; height: 16px; background-color: #0284c7; border-radius: 50%; position: absolute; left: 13px; top: 5px; z-index: 1; }
-        .timeline-date { min-width: 180px; padding-right: 20px; text-align: right; font-weight: bold; color: #475569; margin-left: -120px; }
-        .timeline-content-container { margin-left: 40px; background-color: #f8fafc; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-grow: 1; }
-        .section-title { font-size: 1.875rem; font-weight: 700; color: #1e3a8a; margin-bottom: 1rem; border-bottom: 2px solid #60a5fa; padding-bottom: 0.5rem; }
-        .sub-section-title { font-size: 1.5rem; font-weight: 600; color: #1d4ed8; margin-top: 1.5rem; margin-bottom: 0.75rem; }
-        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); padding: 1.5rem; margin-bottom: 1rem; }
-        .highlight-text { color: #0284c7; font-weight: 600; }
-        .tab-button { padding: 0.5rem 1rem; border-radius: 0.375rem; background-color: #e0f2fe; color: #0c4a6e; margin-right: 0.5rem; cursor: pointer; transition: background-color 0.3s; }
-        .tab-button.active { background-color: #0284c7; color: white; }
-        .tooltip { position: relative; display: inline-block; }
-        .tooltip .tooltiptext { visibility: hidden; width: 220px; background-color: #555; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0; transition: opacity 0.3s; }
-        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
-    </style>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+    header {
+        position: relative;
+        width: 100%;
+        height: 260px;
+        overflow: hidden;
+        text-align: center;
+        color: white;
+    }
+    header img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+    header h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2.4em;
+        font-weight: bold;
+        text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+    }
+    nav {
+        background: #003399;
+        color: white;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    nav a {
+        padding: 15px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 0.95em;
+    }
+    nav a:hover, nav a.active {
+        background: #002266;
+    }
+    main {
+        padding: 20px;
+        max-width: 960px;
+        margin: auto;
+    }
+    section {
+        margin-bottom: 40px;
+    }
+    h2 {
+        color: #003399;
+        border-bottom: 2px solid #003399;
+        padding-bottom: 6px;
+        margin-bottom: 15px;
+    }
+    details {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px;
+        background: #fff;
+    }
+    summary {
+        font-weight: bold;
+        cursor: pointer;
+        outline: none;
+    }
+    .timeline {
+        position: relative;
+        margin: 20px 0;
+        padding-left: 40px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #003399;
+    }
+    .event {
+        position: relative;
+        margin-bottom: 20px;
+        padding-left: 25px;
+    }
+    .event::before {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 0;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 4px solid #003399;
+    }
+    .event h3 {
+        margin: 0 0 5px 0;
+        font-size: 1em;
+        color: #003399;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 10px;
+        background: #fff;
+    }
+    table th, table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+    table th {
+        background: #e6e6f2;
+    }
+    footer {
+        font-size: 0.9em;
+        background: #f0f0f0;
+        padding: 20px;
+    }
+    footer ol {
+        margin: 0;
+        padding-left: 20px;
+    }
+    footer li {
+        margin-bottom: 8px;
+    }
+    @media (max-width: 600px) {
+        header h1 {
+            font-size: 1.6em;
+        }
+        nav a {
+            flex: 1 1 50%;
+            text-align: center;
+        }
+    }
+
+    /* Estilo do simulador */
+    form#simulador-form {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 420px;
+        background: #fff;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    form#simulador-form label {
+        font-weight: bold;
+    }
+    form#simulador-form input,
+    form#simulador-form select,
+    form#simulador-form button {
+        padding: 6px;
+        font-size: 0.9em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    form#simulador-form button {
+        background: #003399;
+        color: white;
+        cursor: pointer;
+    }
+    form#simulador-form button:hover {
+        background: #002266;
+    }
+</style>
+<script>
+    // Highlight the active navigation link based on scroll position
+    document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('main section');
+        function onScroll() {
+            let index = sections.length;
+            while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
+            navLinks.forEach((link) => link.classList.remove('active'));
+            if (navLinks[index]) navLinks[index].classList.add('active');
+        }
+        onScroll();
+        window.addEventListener('scroll', onScroll);
+    });
+</script>
 </head>
-<body class="bg-stone-50 text-gray-800">
+<body>
+<header>
+    <!-- A imagem do cabeçalho é incorporada como uma string base64 para garantir que o ficheiro funcione independentemente de arquivos externos. -->
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAMgAyADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDgaKKKBBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRS0CCiiigAooooAKKKKACiiigAooooAWkpaSgApaKKQBRRRQIKKKKAFooooAKUUlLSEWkOY6gPU1PDzGagb7xqUQtxKKKKooKKKKACiilxSAKAM0dKUGgDRsbKKaJmdhms+dAkpUHIFOWZ0GFbFRk7utSk09SUmmMopTSVZYUUUUAFFFFABRRRQAGkpaDQAlFFLQMSilpKAClFJRQAtFJS0AJRRRQMSiiigAooooAKKKKACiiigAoopKAFopKKBhRRRTAKKKKACiiigAooooAKKKKACiiigAopKWgBKKWkoAKKKKACiiimAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUtFFAgooooAKKKKACiiigAooooAKWkpaAEpaKKACiiikAUUUUCCilooAKKKKAFpRSUopCLNtypqJx8xrb0DQ59SR3ThRxk1n6jYy2N28E33h+tQmr2M09SlSYp5wKTNUUAFHApMmigAJpKWkoGKKDR0pOtAAaSg0Uxh1pKKWgBKKKKACiiigApKWigYUUUlAC0UopwXNIQykp5Uim0DEooopgFFFFAC9aSiigAooooGFJS0AEigBKKWkoAKKKKACkpaSmAUUUUAFFFFAwooooAKKKKACiiigAooooAKKKKACiiigApKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFABRRS0AJS0oGaCMUAJRRRQIKKKKACiiigAooooAKKKKAClpKWgAooooAKKKKQBRRRQIWiigCgApQKKXNAgAp4x2pg5p44pCZ1HhrxAmlWzRTISpORisvX9Q/tO/Nwq7VxgCs4sQKAdyEVny63It1GUlLSVZYUUUUAFFLSE0AIaKSlpjEpKKKAFpKKKACiiigAooooAKKKKACiiloAAKtQBcc1VzT1kIqZK4mWJ1XHFVCKe0hamZoSsCExSUtFUUJRS0YoASijFFABRS0lABTwRimUUDTBuTSUtJQAUUUUAFJS0UwEooooGFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACUUtJQAUUUUAFFFFMAooooAKKKKACiiigAooooAKWiigCRMYofpTASOlBJNId9BKKKKZIUUUUAFFFFABRRRQAUUtFABRRRSEFFFFABRS0UAFGKKKAFozSUtAgoFFLQAo4pVptP7gUmJgx7UKeaQ9aKQCsMGkp5GVzTKAClxQBmgmgBCaSlpKAEoNLSGmMSiiigAooooGFFFFABSikqSBPMlVOm44pMQzFGK6258PW8elecGG7Ga5NhgkelTGalsJO4maSiirKFpDS0lABRSUtABRRRQAUUlFABmiiigBas2lt57VWqxa3HkNmple2gmPvLQwVTIq5eXZnqoaI3tqCv1EpKWkqigooooAKKKKYCUUuKKQxKKWkpgFFFFABRRRQAUUtFACUUUUAFFFFABRRRQAUlLSUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigApaSigQtFFFABRRRQAUUUUALRiilAyQKQhKK17fQ5Zrcyj0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M6mhIcncKKKKZIlFFFABRRRQAUUUUAFFFFABRRRQA6iiigkKKKKBBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUALSUtJQAtFJRSAWiikoAWikooAWiiigBaKSigCRG21p6GttPq9ul3jyiejdCe2ayRTgaiUbpoqLs7nc+MEsrayjMaRtIzAKp9O/SuMaZj93CD0UYqIuW5JJxxyc0mailT5I2uazquQpOTyc/WnxzSRZMcjoT12nGaiozWliOZ7js5680n4UmaKZNxc46U4SOOjsPxplGaAuyaO6miOUlYH60Fw3LKDnrjg1DmlBxSsLmY/CnocfWjafr9KafUUA4oJZIGD8Pwf73+NKFKPh+hGCfamBz35+tTRSDhWAKk9Cen+FJksACkUuepIX+v9BUbcACu0u/C9pFopm+0t5yLvLdjx6VxztGD8gLe7f4VEZqWxCZFgnoM0bQOpx7UrMx4zx6CmVoWLuA6D8TSEk9aSigAooooGLmkzQTSUwDNFJRQMKKKKYxKKKSgBaKSimMKKKKACiiigAoopKBhRRS0AJRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAwooooAKKKKAEooooAKKKKACiiigAooooAKKKKAHUUUUEBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAC0lLQBSAKKXFJQISiiigYUUUtACUtFFABRRRQAtFJS0AFFFFAwooopAFFFFABRRRQIKWkooAUGnU2lBoELSg0lFIkvvql7JZi1e4cwjjb7emapFqQnikzSSS2FYXNJSUUxhRRmigBKWlVSxwKc8RQc0XC5HSUtJTKCkpaSmAUUUUDCikpaAEopaSmMKKKKACiiigApKWkoGFFFFABRRRQAUUUUAFFFFABRRRQAUUUUDEopaKACikooAKKKKACiiigAooooAKKKKACiiigAooooAdRRRQSFFFFAgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAFpRTaXNIQ6kNGaQ0AJRRRQMKKKKACiiigBaKSigBaKSloAKKKKACiiigAooooAKKKKAFopKWgApaSikIcDV22sjOm7OKo1ctr0wptxUTvb3SJX6ENxGYpCtRU+aUyyFjUeapXtqNC0lFJTGLRmkooAkifY2afLMHGKgopWCwuaSikqhi0lFGaBhSUtJQAtFJRQMKKKKYBRRS0AJRSgE0EEdaQxKSlopgJRRRQAUUUUAFFFFABRRRQAUUUUDCiiigAooooASiiigAooooAKKKKACiiigAooooAKKKKACiiigB1FFFBAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAtFFJQAtFJRSAKKKKACilpKACiiigAooooAKKWigBKWkooAWikpaACikpaACiiigApaSigBaKSigQtKKSikAtJRRQAUUUUwCikooAWikooAKKKSgYtJRRQAUUUUwCiiigYUUUUAFFFFAyxGBtokAxUKuVpWkJqLO4DDSUtJVgFFFFABRRRQAUUUUAFFFFABRRRQMKWkpRQAUhpaSgYlFFFAgooooAKKKKACiiigAooooAKKKKACiiigB1FFFBAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIApaKMUAFFLtpDQISiiigYUUUUAFFFFAC0lLSUALRRRQAUUUUAFLSUUCClpKKACiiigAooooAKKKSgYUUUtACUUUUwCiiigYUUUUAFFFFABRRRQMKKKKAEooooAKKKKACiiigAooooAKKKKACiiigYUUUUAFFFFACUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAOooooICiiigAooooAKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiikAtPFMpwNDEx1ManZppNIBKSlpKYwooopgFFFFIAooopgFFFFIApaSigBaKKKACikooAWiikoAWikpaACkoooAKKKKYBRRRQAUUUUDCkpaKACikooAWikooGLSUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAxKKWkoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAHUUUUEBRRRQAtGKBTgKQhuKKdSGgBtFLSUxhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAtFJRSAXNFJRQAUUUUwCiiigAooooAKKKKACiiigBaKSigAooopAFFFFABRRRQAUUUUwCiiigAooooAKKKKBhRRSUALRRRQAlFFFABRRRQAUUUUDCiiigAooooAKKKKACiiigAooooAKKKKACikpaACkpaSgAooooGFLSUUAFFFFAC0lFFABRRRQAUUUUAFFFFAH//2Q==" alt="Rede digital com cores de Portugal">
+    <h1>Guia Interativo: Adoção da NIS&nbsp;2 em Portugal</h1>
+</header>
+    <nav>
+    <a href="#intro">Introdução</a>
+    <a href="#estado">Estado da Transposição</a>
+    <a href="#classificacao">Classificação de Entidades</a>
+        <a href="#afetado">Quem é Afetado?</a>
+    <a href="#sancoes">Sanções</a>
+    <a href="#setores">Impacto por Setor</a>
+    <a href="#preparacao">Como Preparar</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#recursos">Recursos</a>
+</nav>
+<main>
+    <section id="intro">
+        <h2>Introdução</h2>
+        <p>A Diretiva NIS&nbsp;2 (Diretiva&nbsp;EU&nbsp;2022/2555) foi publicada a 14 de dezembro de 2022 e pretende atualizar e reforçar a segurança das redes e da informação na União Europeia. Esta nova versão revoga a anterior Diretiva NIS e visa garantir um nível elevado de cibersegurança nos Estados‑Membros. Entre os seus objetivos estão exigir que os Estados‑Membros assegurem um nível elevado de segurança, reforçar a cooperação entre autoridades e obrigar os operadores de sectores‑chave a adotar medidas adequadas e a notificar incidentes significativos&nbsp;<sup><a href="#fn1">[1]</a></sup>. A Diretiva também procura harmonizar as regras, corrigindo divergências observadas na implementação da anterior normativa&nbsp;<sup><a href="#fn1">[1]</a></sup>.
+        </p>
+        <details>
+            <summary>Diferencias face à NIS1</summary>
+            <p>A NIS 2 amplia o âmbito de aplicação ao incluir novos sectores e tipologias de entidades e distingue «entidades essenciais» e «entidades importantes»; reforça as medidas de gestão de riscos e de reporte de incidentes; introduz uma abordagem à segurança na cadeia de abastecimento; aumenta os poderes de supervisão das autoridades nacionais; e estabelece responsabilidade directa para as pessoas singulares responsáveis&nbsp;<sup><a href="#fn2">[2]</a></sup>. Estas novidades respondem à crescente interligação digital e ao aumento das ciberameaças na UE&nbsp;<sup><a href="#fn2">[2]</a></sup>.</p>
+        </details>
+        <p>O impulso para a NIS 2 decorre da rápida transformação digital e da crescente interdependência entre sectores económicos, impulsionadas por tecnologias como a computação em nuvem, a mobilidade e as redes 5G. A experiência da primeira Diretiva NIS revelou que divergências na sua transposição criaram níveis de proteção desiguais, dificultando a cooperação e a resposta coordenada a incidentes. A nova diretiva responde a estas lacunas ao reforçar a harmonização, incorporar requisitos de segurança na cadeia de fornecimento e alinhar‑se com outras iniciativas europeias, como o Regulamento&nbsp;DORA e o futuro Acto para a Resiliência Cibernética. Assim, pretende‑se uma abordagem mais abrangente e actualizada à cibersegurança em toda a União Europeia&nbsp;<sup><a href="#fn2">[2]</a></sup>.</p>
+    </section>
 
-    <header class="bg-sky-700 text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <h1 class="text-2xl font-bold">NIS2 em Portugal</h1>
-                <nav class="hidden md:flex space-x-4">
-                    <a href="#inicio" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Início</a>
-                    <a href="#o-que-e" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">O Que é a NIS2?</a>
-                    <a href="#estado-portugal" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Estado em Portugal</a>
-                    <a href="#quem-afetado" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Quem é Afetado?</a>
-                    <a href="#requisitos" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Requisitos</a>
-                    <a href="#sancoes" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Sanções</a>
-                    <a href="#desafios-oportunidades" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Desafios & Oportunidades</a>
-                    <a href="#proximos-passos" class="nav-link px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Próximos Passos</a>
-                </nav>
-                <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-sky-100 hover:text-white hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                    <span class="sr-only">Abrir menu principal</span>
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#inicio" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Início</a>
-                <a href="#o-que-e" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">O Que é a NIS2?</a>
-                <a href="#estado-portugal" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Estado em Portugal</a>
-                <a href="#quem-afetado" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Quem é Afetado?</a>
-                <a href="#requisitos" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Requisitos</a>
-                <a href="#sancoes" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Sanções</a>
-                <a href="#desafios-oportunidades" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Desafios & Oportunidades</a>
-                <a href="#proximos-passos" class="nav-link block px-3 py-2 rounded-md text-base font-medium border-b-2 border-transparent">Próximos Passos</a>
-            </div>
-        </div>
-    </header>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <section id="inicio" class="pt-8 pb-12 text-center">
-            <h2 class="text-4xl font-extrabold text-sky-800 mb-4">Bem-vindo ao Guia Interativo da Diretiva NIS2 em Portugal</h2>
-            <p class="text-lg text-gray-700 mb-6 max-w-3xl mx-auto">
-                A Diretiva NIS2 (UE 2022/2555) representa uma atualização crucial na legislação de cibersegurança da União Europeia, com o objetivo de reforçar a resiliência digital em todos os Estados-Membros. Esta aplicação interativa foi criada para o ajudar a compreender o estado atual da NIS2 em Portugal, os seus impactos, requisitos e os próximos passos para a conformidade.
-            </p>
-            <p class="text-md text-gray-600 mb-8 max-w-2xl mx-auto">
-                Portugal está em processo de transposição da diretiva, com a nova lei prevista para entrar em vigor a <span class="highlight-text">1 de março de 2026</span>. Explore as secções abaixo para se manter informado e preparado.
-            </p>
-            <a href="#o-que-e" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300">Comece a Explorar</a>
-        </section>
-
-        <section id="o-que-e" class="py-12 card">
-            <h2 class="section-title">O Que é a NIS2?</h2>
-            <p class="text-gray-700 mb-4">
-                Esta secção detalha o contexto da Diretiva NIS2, a sua evolução desde a NIS1 e a sua importância estratégica para a resiliência digital em Portugal e na União Europeia. A NIS2 visa estabelecer um nível comum mais elevado de cibersegurança, expandindo o âmbito de aplicação e impondo requisitos mais rigorosos.
-            </p>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="sub-section-title">Contextualização e Evolução</h3>
-                    <p class="text-gray-600 mb-3">A Diretiva NIS2 (Diretiva (UE) 2022/2555) foi publicada a 27 de dezembro de 2022, sucedendo à NIS1. A NIS1, embora pioneira, enfrentou desafios como adoção inconsistente e requisitos variáveis. A NIS2 surge para colmatar estas lacunas, face a um cenário de ameaças cibernéticas em constante evolução, caracterizado por ataques mais frequentes e sofisticados, e o aumento da dependência digital.</p>
-                    <p class="text-gray-600">A diretiva é prospetiva, considerando vetores de ataque emergentes como o uso de IA em *phishing* e os futuros desafios da computação quântica.</p>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">Importância Estratégica</h3>
-                    <p class="text-gray-600 mb-3">O objetivo principal da NIS2 é reforçar a resiliência cibernética das infraestruturas críticas e cadeias de abastecimento na UE. Para Portugal, alinhar-se com a NIS2 é vital para a segurança digital nacional e para promover uma economia digital segura.</p>
-                    <p class="text-gray-600">Fatores geopolíticos, como a guerra Rússia-Ucrânia e ciberataques patrocinados por estados, elevam a cibersegurança a uma questão de segurança nacional, exigindo colaboração público-privada.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="estado-portugal" class="py-12 card">
-            <h2 class="section-title">Estado da Transposição em Portugal</h2>
-            <p class="text-gray-700 mb-6">
-                Portugal, tal como outros Estados-Membros, não cumpriu o prazo inicial de transposição da NIS2 (17 de outubro de 2024). Esta secção explora o processo legislativo nacional, a cronologia revista e o papel do Centro Nacional de Cibersegurança (CNCS).
-            </p>
-            <h3 class="sub-section-title">Cronologia dos Marcos de Implementação</h3>
+    <section id="estado">
+        <h2>Estado da Transposição em Portugal</h2>
+        <p>A transposição da NIS 2 para o ordenamento jurídico nacional deve ocorrer até 17 de outubro de 2024 e as disposições devem ser aplicadas a partir de 18 de outubro de 2024&nbsp;<sup><a href="#fn3">[3]</a></sup>. Contudo, Portugal ainda não concluiu este processo, tendo o CNCS indicado que o procedimento legislativo está em curso&nbsp;<sup><a href="#fn3">[3]</a></sup>.</p>
+        <p>O Governo português iniciou a transposição em 2024. Em 24 de outubro de 2024, o Conselho de Ministros aprovou uma proposta de lei que cria um novo regime jurídico de cibersegurança. O diploma propõe alargar significativamente o número de entidades abrangidas, gradua a exigência regulatória em função da dimensão e criticidade das actividades e prevê a criação de três instrumentos: a Estratégia Nacional de Segurança do Ciberespaço, o Plano Nacional de Resposta a Crises e Incidentes de Cibersegurança e o Quadro Nacional de Referência para a Cibersegurança&nbsp;<sup><a href="#fn4">[4]</a></sup>.</p>
+        <p>Em novembro de 2024 iniciou‑se uma consulta pública sobre a proposta, convidando cidadãos e entidades a contribuir. O Governo sublinhou que o número de entidades abrangidas e os poderes de supervisão do CNCS seriam aumentados, embora se pretendesse reduzir a carga burocrática e adaptar as obrigações à dimensão das entidades&nbsp;<sup><a href="#fn5">[5]</a></sup>. O prazo da consulta foi alargado até 31 de dezembro de 2024 devido ao interesse da sociedade, com a intenção de submeter a proposta à Assembleia da República no início de 2025&nbsp;<sup><a href="#fn6">[6]</a></sup>.</p>
+        <p>Após receber 149 contributos na consulta pública, o Governo aprovou o novo Regime Jurídico da Cibersegurança em Conselho de Ministros a 6 de fevereiro de 2025. O ministro da Presidência realçou que a lei reforça a robustez dos sistemas, aumenta os poderes de supervisão e alarga as obrigações das empresas, variando os deveres conforme a criticidade das infra-estruturas&nbsp;<sup><a href="#fn7">[7]</a></sup>. Esta aprovação destina‑se a preparar o envio da lei para debate parlamentar.</p>
+        <details>
+            <summary>Linha do Tempo</summary>
             <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">14 Dezembro 2022</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">NIS2 Entra em Vigor (UE)</h4>
-                        <p class="text-sm text-gray-600">A diretiva entrou em vigor na legislação da UE. (Concluído)</p>
-                    </div>
+                <div class="event">
+                    <h3>14 Dez 2022</h3>
+                    <p>Publicação da Diretiva NIS 2 e entrada em vigor como legislação da UE.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">17 Outubro 2024</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Prazo Original de Transposição</h4>
-                        <p class="text-sm text-gray-600">Portugal não cumpriu este prazo.</p>
-                    </div>
+                <div class="event">
+                    <h3>21 Nov 2024</h3>
+                    <p>Abertura da consulta pública sobre o Regime Jurídico da Cibersegurança.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">7 Maio 2025</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Parecer Fundamentado da CE</h4>
-                        <p class="text-sm text-gray-600">Comissão Europeia envia parecer a Portugal devido à falha na notificação da transposição.</p>
-                    </div>
+                <div class="event">
+                    <h3>31 Dez 2024</h3>
+                    <p>Encerramento da consulta pública, com 149 contributos.</p>
                 </div>
-                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">Q3 2025 (Previsto)</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Aprovação pelo Conselho de Ministros</h4>
-                        <p class="text-sm text-gray-600">Prevista aprovação do Regime Jurídico da Cibersegurança (RJC).</p>
-                    </div>
+                <div class="event">
+                    <h3>6 Fev 2025</h3>
+                    <p>Conselho de Ministros aprova o novo regime jurídico e anuncia envio ao Parlamento.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">Dezembro 2025 (Previsto)</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Publicação em Diário da República</h4>
-                        <p class="text-sm text-gray-600">Prevista publicação oficial do RJC.</p>
-                    </div>
+                <div class="event">
+                    <h3>Mar 2025</h3>
+                    <p>Governo perde o voto de confiança, atrasando temporariamente a agenda legislativa.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">1 Março 2026 (Previsto)</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Entrada em Vigor da Lei</h4>
-                        <p class="text-sm text-gray-600">O RJC deverá entrar em vigor em Portugal.</p>
-                    </div>
+                <div class="event">
+                    <h3>Q3 2025 (previsto)</h3>
+                    <p>Esperada aprovação pelo Conselho de Ministros do texto final.</p>
                 </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">1 Setembro 2026 (Previsto)</div>
-                    <div class="timeline-content-container">
-                        <h4 class="font-semibold text-sky-700">Início das Primeiras Auditorias</h4>
-                        <p class="text-sm text-gray-600">Programado o início das auditorias de conformidade.</p>
-                    </div>
+                <div class="event">
+                    <h3>Dez 2025 (previsto)</h3>
+                    <p>Publicação da lei no Diário da República.</p>
+                </div>
+                <div class="event">
+                    <h3>1 Mar 2026 (previsto)</h3>
+                    <p>Entrada em vigor do Regime Jurídico da Cibersegurança.</p>
+                </div>
+                <div class="event">
+                    <h3>1 Set 2026 (previsto)</h3>
+                    <p>Início das primeiras auditorias de conformidade.</p>
                 </div>
             </div>
-            <div class="mt-6">
-                <h3 class="sub-section-title">Processo Legislativo e CNCS</h3>
-                <p class="text-gray-600 mb-3">Portugal está a transpor a NIS2 através do Regime Jurídico da Cibersegurança (RJC), que substituirá a Lei da Cibersegurança (Lei 46/2018) e incorporará elementos da Diretiva CER. Uma consulta pública decorreu entre novembro de 2024 e janeiro de 2025, resultando em ajustamentos como a extensão de prazos e clarificação de funções.</p>
-                <p class="text-gray-600">O <span class="highlight-text">Centro Nacional de Cibersegurança (CNCS)</span> é o ponto de contacto único e autoridade competente, disponibilizando informações e formulários no seu website.</p>
+        </details>
+        <p>Apesar das previsões, o prazo final de adopção permanece incerto: as eleições legislativas de março de 2025 e a necessidade de novo debate parlamentar poderão alterar a calendarização&nbsp;<sup><a href="#fn13">[13]</a></sup>. Em maio de 2025, a Comissão Europeia enviou um parecer fundamentado a Portugal e a outros Estados‑Membros por não terem notificado a transposição completa da Diretiva&nbsp;<sup><a href="#fn14">[14]</a></sup>.</p>
+    </section>
+
+    <section id="classificacao">
+        <h2>Classificação de Entidades</h2>
+        <p>O Regime Jurídico da Cibersegurança amplia drasticamente o número de entidades reguladas, passando de cerca de 1 000 operadores para uma estimativa de 7 000–9 000 organizações&nbsp;<sup><a href="#fn9">[9]</a></sup>. A nova legislação classifica as organizações em duas categorias principais, reflectindo uma abordagem proporcional ao risco:</p>
+        <table>
+            <tr><th>Categoria</th><th>Limiar de trabalhadores</th><th>Volume de negócios</th><th>Setores incluídos sem limiar</th></tr>
+            <tr><td>Entidades essenciais</td><td>≥ 250</td><td>≥ 50 M€</td><td>Telecomunicações, serviços de cloud, DNS e prestadores de serviços de confiança</td></tr>
+            <tr><td>Entidades importantes</td><td>≥ 50</td><td>≥ 10 M€</td><td>Idêntico aos essenciais</td></tr>
+        </table>
+        <p>Além destas, certos prestadores de serviços de comunicações electrónicas, DNS, registo de domínios e serviços de confiança são regulados independentemente da dimensão. A classificação utiliza os códigos NIF e CAE das empresas, e o CNCS planeia disponibilizar uma ferramenta de autoavaliação para que as entidades identifiquem a sua categoria&nbsp;<sup><a href="#fn9">[9]</a></sup>.</p>
+    </section>
+
+    <!-- Secção sobre Quem é Afetado com gráficos ilustrativos -->
+    <section id="afetado">
+        <h2>Quem é Afetado?</h2>
+        <p>A Diretiva NIS 2 aumenta significativamente o número de entidades reguladas em Portugal. Estima‑se que o universo de organizações abrangidas passe de cerca de 1 000 para um intervalo entre 7 000 e 9 000, incluindo fabricantes de média dimensão e municípios com mais de 50 000 habitantes. Esta secção apresenta um gráfico ilustrativo do aumento de entidades e revê os critérios de classificação de entidades essenciais e importantes.</p>
+        <div style="display:flex; flex-wrap:wrap; align-items:center;">
+            <canvas id="chartEntidades" style="max-width:300px; width:100%;"></canvas>
+            <div style="flex:1; padding-left:20px; min-width:250px;">
+                <h3>Critérios de Classificação</h3>
+                <p><strong>Entidades Essenciais (EE)</strong>: grandes empresas em sectores críticos.<br>
+                • Pelo menos 250 trabalhadores, ou<br>
+                • Volume de negócios anual &gt; 50 M€, ou<br>
+                • Balanço anual &gt; 43 M€.</p>
+                <p><strong>Entidades Importantes (EI)</strong>: médias empresas em sectores críticos não classificadas como EE.<br>
+                • Pelo menos 50 trabalhadores, ou<br>
+                • Volume de negócios anual ≥ 10 M€, ou<br>
+                • Balanço anual ≥ 10 M€.</p>
+                <p><em>Nota:</em> Telecomunicações, cloud, DNS e prestadores de confiança são regulados independentemente da dimensão.</p>
             </div>
-        </section>
+        </div>
+        <!-- Gráfico de distribuição das entidades por categoria (EE, EI e fora do âmbito) -->
+        <div style="margin-top:20px; display:flex; justify-content:center; flex-wrap:wrap;">
+            <canvas id="chartDistribuicao" style="max-width:250px; width:100%;"></canvas>
+        </div>
+        <p style="font-size:0.9em; color:#555; text-align:center; margin-top:5px;">
+            Distribuição estimada das entidades reguladas segundo a NIS 2 (valores meramente ilustrativos) <sup><a href="#fn9">[9]</a></sup>.
+        </p>
+    </section>
 
-        <section id="quem-afetado" class="py-12 card">
-            <h2 class="section-title">Quem é Afetado?</h2>
-            <p class="text-gray-700 mb-6">
-                A NIS2 expande drasticamente o número de entidades reguladas em Portugal, de cerca de 1.000 para uma estimativa entre 7.000 e 9.000. Esta secção ajuda a perceber quem são estas entidades, os critérios de classificação e os setores abrangidos. Inclui uma ferramenta de autoavaliação indicativa.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="sub-section-title">Expansão do Âmbito</h3>
-                    <div class="chart-container my-4 h-64 md:h-80">
-                        <canvas id="scopeExpansionChart"></canvas>
-                    </div>
-                    <p class="text-gray-600 mt-4">Esta expansão inclui fabricantes de média dimensão e municípios com mais de 50.000 habitantes, representando uma mudança fundamental no panorama regulatório.</p>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">Critérios de Classificação</h3>
-                    <p class="text-gray-600 mb-2"><span class="font-semibold text-sky-700">Entidades Essenciais (EE):</span> Grandes empresas em setores críticos.</p>
-                    <ul class="list-disc list-inside text-gray-600 mb-4 ml-4">
-                        <li>Pelo menos 250 trabalhadores, OU</li>
-                        <li>Volume de negócios anual > €50 milhões, OU</li>
-                        <li>Balanço anual > €43 milhões.</li>
-                    </ul>
-                    <p class="text-gray-600 mb-2"><span class="font-semibold text-sky-700">Entidades Importantes (EI):</span> Médias empresas em setores de elevada criticidade não classificadas como EE.</p>
-                    <ul class="list-disc list-inside text-gray-600 mb-4 ml-4">
-                        <li>Pelo menos 50 trabalhadores, OU</li>
-                        <li>Volume de negócios anual ≥ €10 milhões, OU</li>
-                        <li>Balanço anual ≥ €10 milhões.</li>
-                    </ul>
-                    <p class="text-gray-600">Certas entidades (telecomunicações, cloud, DNS, serviços de confiança) são reguladas independentemente do tamanho.</p>
-                </div>
-            </div>
+    <section id="sancoes">
+        <h2>Sanções e Responsabilidade</h2>
+        <p>O regime prevê um quadro sancionatório robusto, com coimas diferenciadas conforme o tipo de entidade. Os valores máximos aplicáveis são superiores aos existentes na legislação anterior e incluem medidas adicionais como suspensão de licenças ou desqualificação de administradores&nbsp;<sup><a href="#fn10">[10]</a></sup>.</p>
 
-            <div class="mt-8">
-                <h3 class="sub-section-title">Ferramenta de Autoavaliação Indicativa</h3>
-                <p class="text-gray-600 mb-4">Responda às seguintes perguntas para uma indicação da possível classificação da sua entidade. <span class="font-semibold">Nota:</span> Esta é uma ferramenta simplificada. Consulte sempre o CNCS e aconselhamento jurídico para uma determinação oficial.</p>
-                <div class="bg-orange-50 p-6 rounded-lg shadow">
-                    <div class="mb-4">
-                        <label for="sector" class="block text-sm font-medium text-gray-700 mb-1">Selecione o setor principal da sua entidade:</label>
-                        <select id="sector" name="sector" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
-                            <option value="">-- Selecione um setor --</option>
-                            <optgroup label="Potencialmente Essencial (Anexo I)">
-                                <option value="energia">Energia (eletricidade, gás, petróleo, hidrogénio)</option>
-                                <option value="transportes">Transportes (aéreo, ferroviário, marítimo, rodoviário)</option>
-                                <option value="banca">Banca</option>
-                                <option value="mercado_financeiro">Infraestruturas do Mercado Financeiro</option>
-                                <option value="saude">Saúde (hospitais, fabricantes de medicamentos)</option>
-                                <option value="agua_potavel">Abastecimento e Distribuição de Água Potável</option>
-                                <option value="aguas_residuais">Gestão de Águas Residuais</option>
-                                <option value="infra_digital_critica">Infraestruturas Digitais Críticas (DNS, TLD, Cloud, Data Center, Redes de Confiança, Telecomunicações)</option>
-                                <option value="gestao_tic_b2b">Gestão de Serviços TIC (B2B)</option>
-                                <option value="admin_publica_central">Administração Pública (Central)</option>
-                                <option value="espaco">Espaço</option>
-                            </optgroup>
-                            <optgroup label="Potencialmente Importante (Anexo II)">
-                                <option value="servicos_postais">Serviços Postais e de Correio</option>
-                                <option value="gestao_residuos">Gestão de Resíduos</option>
-                                <option value="quimicos">Produção, Fabrico e Distribuição de Produtos Químicos</option>
-                                <option value="alimentar">Produção, Processamento e Distribuição de Produtos Alimentares</option>
-                                <option value="industria_transformadora">Indústria Transformadora (equip. médicos, eletrónica, etc.)</option>
-                                <option value="fornecedores_digitais_gerais">Fornecedores de Serviços Digitais (plataformas online, motores busca, redes sociais)</option>
-                                <option value="investigacao">Investigação</option>
-                                <option value="admin_publica_local">Administração Pública (Local/Regional com ≥50.000 habitantes)</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Número de trabalhadores:</label>
-                        <input type="number" id="employees" name="employees" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" placeholder="Ex: 150">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Volume de negócios anual (em milhões de €):</label>
-                        <input type="number" id="turnover" name="turnover" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" placeholder="Ex: 25">
-                    </div>
-                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Balanço total anual (em milhões de €):</label>
-                        <input type="number" id="balance" name="balance" class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm" placeholder="Ex: 20">
-                    </div>
-                    <button id="assessButton" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-md shadow">Avaliar Classificação Indicativa</button>
-                    <div id="assessmentResult" class="mt-4 p-3 bg-sky-100 text-sky-800 rounded-md hidden"></div>
-                </div>
-            </div>
-             <p class="text-gray-600 mt-6">As entidades devem autoidentificar-se e registar-se no CNCS. Uma ferramenta oficial de autoavaliação será disponibilizada pelo CNCS.</p>
-        </section>
+        <!-- Gráfico comparativo das coimas máximas para cada tipo de entidade -->
+        <div style="display:flex; justify-content:center; margin:20px 0;">
+            <canvas id="chartSanctions" style="max-width:350px; width:100%;"></canvas>
+        </div>
+        <table>
+            <tr><th>Entidade</th><th>Coima máxima</th><th>Medidas adicionais</th></tr>
+            <tr><td>Entidades essenciais</td><td>10 M€ ou 2% do volume de negócios mundial</td><td>Suspensão de licença; desqualificação de administradores</td></tr>
+            <tr><td>Entidades importantes</td><td>7 M€ ou 1,4% do volume de negócios</td><td>Penalidades periódicas; divulgação pública da infração</td></tr>
+            <tr><td>Infrações procedimentais</td><td>0,5–2 M€</td><td>Ordens correctivas vinculativas</td></tr>
+        </table>
+        <p>As obrigações incluem a aprovação de programas de cibersegurança pelo conselho de administração e a supervisão da sua implementação. Em caso de negligência reiterada, os administradores poderão ser destituídos ao abrigo do Código das Sociedades Comerciais.</p>
+    </section>
 
-        <section id="requisitos" class="py-12 card">
-            <h2 class="section-title">Requisitos Essenciais e Obrigações</h2>
-            <p class="text-gray-700 mb-6">
-                A NIS2 introduz um conjunto de medidas mínimas de segurança e obrigações de notificação de incidentes. Esta secção detalha esses requisitos, que se baseiam numa "abordagem de todos os riscos".
-            </p>
-            <h3 class="sub-section-title">Medidas Mínimas de Segurança</h3>
-            <p class="text-gray-600 mb-4">As entidades devem implementar, no mínimo, as seguintes medidas:</p>
-            <div id="securityMeasuresAccordion" class="space-y-2">
-                </div>
+    <section id="setores">
+        <h2>Impacto por Setor</h2>
+        <p>A NIS 2 terá efeitos distintos nos diversos sectores da economia portuguesa. A tabela abaixo apresenta alguns exemplos de alterações e obrigações que o Regime Jurídico da Cibersegurança introduz em sectores‑chave&nbsp;<sup><a href="#fn11">[11]</a></sup>.</p>
+        <table>
+            <tr><th>Sector</th><th>Mudanças principais</th><th>Novas obrigações típicas</th></tr>
+            <tr><td>Manufactura</td><td>Passa a ser regulada</td><td>Testes de penetração; auditorias de risco na cadeia de fornecedores</td></tr>
+            <tr><td>Energia e utilidades</td><td>Inclui hidrogénio e GNL</td><td>Monitorização contínua 24/7; relatórios ao CNCS</td></tr>
+            <tr><td>Saúde</td><td>Alarga-se de 50 para mais de 250 provedores</td><td>Governação ISO; exercícios trimestrais de backups</td></tr>
+            <tr><td>Infraestrutura digital</td><td>Regulada independentemente da dimensão</td><td>Centro de operações de segurança na UE; adopção de modelos zero‑trust</td></tr>
+            <tr><td>Finanças</td><td>Coberta pelo regulamento DORA</td><td>Testes de penetração conduzidos por equipas red‑team; registo de risco de terceiros</td></tr>
+            <tr><td>Administração pública</td><td>Inclui ministérios e municípios com ≥50 000 habitantes</td><td>Adesão às bases CNCS; ausência de coimas financeiras</td></tr>
+        </table>
+    </section>
 
-            <h3 class="sub-section-title mt-8">Obrigações de Notificação de Incidentes Significativos</h3>
-            <p class="text-gray-600 mb-4">Qualquer incidente considerado *significativo* deve ser notificado ao CNCS/CSIRT nacional.</p>
-            <div class="chart-container my-4 h-48 md:h-64">
-                <canvas id="notificationTimelineChart"></canvas>
-            </div>
-            <p class="text-gray-600 mt-2">Um incidente é "significativo" com base no número de utilizadores afetados, duração, gravidade da interrupção e extensão do impacto. A notificação não aumenta a responsabilidade da entidade.</p>
-        </section>
+    <section id="preparacao">
+        <h2>Como as Entidades se Devem Preparar</h2>
+        <p>Embora a legislação ainda não esteja em vigor, as organizações devem iniciar a adaptação o quanto antes. A preparação antecipada facilita o registo e reduz o risco de sanções. Recomenda‑se&nbsp;<sup><a href="#fn12">[12]</a></sup>:</p>
+        <ul>
+            <li><strong>Confirmar o estatuto:</strong> Utilizar a ferramenta de autoavaliação do CNCS (quando disponível) para verificar se a organização é considerada «essencial» ou «importante».</li>
+            <li><strong>Reunir dados:</strong> Preparar NIF, código CAE e contactos para segurança informática, necessários para o registo a partir de março de 2026.</li>
+            <li><strong>Realizar análise de lacunas:</strong> Comparar os controlos existentes com as medidas exigidas pelo artigo 21.º da NIS 2, com destaque para backups, autenticação multifactor e gestão de fornecedores.</li>
+            <li><strong>Elaborar procedimentos:</strong> Criar um plano de resposta a incidentes alinhado com o RGPD e com os prazos de notificação (24h/72h/30 dias) previstos na Diretiva.</li>
+            <li><strong>Envolver a administração:</strong> Garantir que a administração aprova o programa de cibersegurança e agenda auditorias anuais, pois a responsabilidade passa a recair directamente sobre os órgãos de gestão.</li>
+        </ul>
+    </section>
 
-        <section id="sancoes" class="py-12 card">
-            <h2 class="section-title">Responsabilidade da Gestão e Sanções</h2>
-            <p class="text-gray-700 mb-6">
-                Um dos maiores impactos da NIS2 é a responsabilização direta dos órgãos de gestão pela cibersegurança. A diretiva também estabelece um regime sancionatório rigoroso.
-            </p>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="sub-section-title">Responsabilidade da Gestão</h3>
-                    <p class="text-gray-600 mb-3">Os órgãos de gestão são responsáveis por aprovar e supervisionar os programas de cibersegurança. Devem promover formação obrigatória para si e para os colaboradores. Em caso de negligência grave, podem enfrentar responsabilização pessoal, incluindo proibições temporárias de cargos.</p>
-                    <p class="text-gray-600">Esta mudança eleva a cibersegurança a uma prioridade estratégica ao nível do conselho de administração.</p>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">Regime Sancionatório</h3>
-                    <p class="text-gray-600 mb-4">Selecione o tipo de entidade para ver as coimas máximas aplicáveis:</p>
-                    <div class="mb-4">
-                        <button class="tab-button active" data-type="ee">Entidades Essenciais</button>
-                        <button class="tab-button" data-type="ei">Entidades Importantes</button>
-                    </div>
-                    <div id="sanctionsContent">
-                        </div>
-                     <p class="text-gray-600 mt-4">Outras sanções não monetárias incluem suspensão de licenças, inibição de diretores (EE), penalidades periódicas, nomeação pública (EI) e ordens corretivas. A interdição de órgãos de gestão só ocorre como sanção acessória.</p>
-                </div>
-            </div>
-        </section>
+    <section id="simulador">
+        <h2>Simulador de Classificação</h2>
+        <p>Este simulador ajuda a estimar se a sua organização se enquadra como «entidade essencial», «entidade importante» ou se poderá ficar fora do âmbito da NIS&nbsp;2. Os resultados são meramente indicativos e não substituem a consulta às autoridades competentes.</p>
+        <form id="simulador-form">
+            <label for="empregados">Número de trabalhadores:</label>
+            <input type="number" id="empregados" name="empregados" min="0" required>
+            <label for="volume">Volume de negócios (em milhões de euros):</label>
+            <input type="number" id="volume" name="volume" min="0" step="0.01" required>
+            <label for="sector">Sector de actividade:</label>
+            <select id="sector" name="sector">
+                <option value="digital">Telecomunicações e serviços digitais (cloud, DNS e confiança)</option>
+                <option value="infra">Infraestruturas digitais (centros de dados, pontos de troca de Internet)</option>
+                <option value="energia">Energia e utilidades (electricidade, gás, água, hidrogénio, resíduos)</option>
+                <option value="transportes">Transportes (aéreo, ferroviário, rodoviário, marítimo)</option>
+                <option value="financas">Finanças e seguros</option>
+                <option value="saude">Saúde</option>
+                <option value="administracao">Administração pública (ministérios e câmaras municipais)</option>
+                <option value="manufactura">Indústria e manufactura</option>
+                <option value="outros_criticos">Outros sectores críticos</option>
+                <option value="outro">Outro</option>
+            </select>
+            <button type="submit">Calcular</button>
+        </form>
+        <div id="resultado" style="margin-top:10px;font-weight:bold;"></div>
+    </section>
 
-        <section id="desafios-oportunidades" class="py-12 card">
-            <h2 class="section-title">Desafios e Oportunidades</h2>
-            <p class="text-gray-700 mb-6">
-                A implementação da NIS2 traz consigo desafios significativos, especialmente para PMEs, mas também abre portas para oportunidades estratégicas importantes para as organizações portuguesas.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="sub-section-title">Principais Desafios</h3>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li><span class="font-semibold">Alocação de Recursos:</span> Custos com tecnologia, auditorias, formação. Baixa maturidade em segurança de muitas empresas.</li>
-                        <li><span class="font-semibold">Escassez de Talento:</span> Falta de especialistas em cibersegurança, especialmente para setores recém-incluídos.</li>
-                        <li><span class="font-semibold">Risco da Cadeia de Abastecimento:</span> Falta de visibilidade e capacidade para gerir a segurança de fornecedores.</li>
-                        <li><span class="font-semibold">Mudança Cultural:</span> Transformar a cibersegurança numa estratégia integrada e preventiva, não apenas tarefa de TI.</li>
-                        <li><span class="font-semibold">Identificação de Ativos Críticos:</span> Necessidade de avaliações de risco.</li>
-                        <li><span class="font-semibold">Manter-se Atualizado:</span> A NIS2 evolui com as melhores práticas.</li>
-                        <li><span class="font-semibold">Maturidade na Gestão de Incidentes:</span> Dificuldade em cumprir prazos de notificação de 24h.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="sub-section-title">Oportunidades Estratégicas</h3>
-                     <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li><span class="font-semibold">Competitividade e Resiliência:</span> Melhorar postura de cibersegurança, construir confiança, mitigar danos.</li>
-                        <li><span class="font-semibold">Avanço da Maturidade Digital:</span> Impulsionar Portugal para um futuro digital mais seguro.</li>
-                        <li><span class="font-semibold">Diferenciador Competitivo:</span> Ganhar credibilidade junto de parceiros e clientes.</li>
-                        <li><span class="font-semibold">Estratégia Preventiva Integrada:</span> Ir além da mera conformidade.</li>
-                        <li><span class="font-semibold">Fortalecimento da Segurança Geral:</span> Transformar conformidade em oportunidade.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="proximos-passos" class="py-12 card">
-            <h2 class="section-title">Recomendações e Próximos Passos</h2>
-            <p class="text-gray-700 mb-6">
-                Dada a transposição em curso e os prazos, é crucial que as organizações portuguesas adotem uma abordagem proativa. Esta secção oferece recomendações para iniciar a jornada de conformidade com a NIS2.
-            </p>
-            <div class="space-y-4">
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">1. Confirme o seu Estatuto</h4>
-                    <p class="text-gray-600">Utilize a ferramenta de autoavaliação do CNCS (quando disponível) e procure aconselhamento para determinar se a sua entidade é Essencial (EE) ou Importante (EI).</p>
-                </div>
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">2. Prepare os Dados para Registo</h4>
-                    <p class="text-gray-600">Reúna NIF, CAE, contactos cibernéticos para o registo obrigatório (previsto para Março de 2026).</p>
-                </div>
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">3. Realize uma Análise de Lacunas (*Gap Analysis*)</h4>
-                    <p class="text-gray-600">Avalie a sua conformidade atual com os requisitos do Artigo 21 da NIS2 (medidas mínimas de segurança). Identifique e avalie riscos dos ativos críticos.</p>
-                </div>
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">4. Elabore/Atualize Planos de Resposta a Incidentes</h4>
-                    <p class="text-gray-600">Desenvolva um plano robusto, alinhado com os prazos de notificação da NIS2 e GDPR. Teste-o regularmente.</p>
-                </div>
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">5. Envolva a Administração</h4>
-                    <p class="text-gray-600">Garanta a aprovação do programa de cibersegurança pela gestão de topo e agende auditorias anuais.</p>
-                </div>
-                 <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">6. Promova Formação e Sensibilização</h4>
-                    <p class="text-gray-600">Assegure que todos os colaboradores compreendem as suas responsabilidades. A formação deve ser contínua.</p>
-                </div>
-                <div class="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-1">7. Considere Apoio Externo</h4>
-                    <p class="text-gray-600">Se necessário, procure consultoria especializada para o ajudar na conformidade, especialmente se a maturidade em cibersegurança for baixa ou os recursos limitados.</p>
-                </div>
-            </div>
-            <p class="text-gray-700 mt-8 text-center font-semibold">Uma abordagem proativa não só reduz riscos e penalidades, mas também ajuda a incorporar uma cultura de resiliência na organização.</p>
-        </section>
-    </main>
-
-    <footer class="bg-sky-800 text-sky-100 py-8 text-center">
-        <p>&copy; <span id="currentYear"></span> Guia Interativo NIS2 Portugal. Conteúdo adaptado do relatório de análise.</p>
-        <p class="text-sm">Esta aplicação é para fins informativos e não constitui aconselhamento jurídico.</p>
-    </footer>
-
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                navLinks.forEach(l => l.classList.remove('active'));
-                e.target.classList.add('active');
-                if (mobileMenu.classList.contains('hidden') === false) {
-                    mobileMenu.classList.add('hidden');
-                }
-            });
-        });
-        
-        window.addEventListener('scroll', () => {
-            let current = '';
-            const sections = document.querySelectorAll('main section');
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 80) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').substring(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-
-        const scopeExpansionCtx = document.getElementById('scopeExpansionChart').getContext('2d');
-        new Chart(scopeExpansionCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Entidades Reguladas'],
-                datasets: [
-                    {
-                        label: 'Antes da NIS2 (aprox.)',
-                        data: [1000],
-                        backgroundColor: 'rgba(251, 146, 60, 0.7)',
-                        borderColor: 'rgba(251, 146, 60, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Com NIS2 (estimativa)',
-                        data: [8000], // Mid-point of 7000-9000
-                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                        borderColor: 'rgba(59, 130, 246, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: 'Número de Entidades' } }
-                },
-                plugins: {
-                    title: { display: true, text: 'Aumento Estimado de Entidades Reguladas' },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += context.parsed.y.toLocaleString('pt-PT');
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        const assessButton = document.getElementById('assessButton');
-        const assessmentResult = document.getElementById('assessmentResult');
-        assessButton.addEventListener('click', () => {
+    <section id="recursos">
+        <h2>Recursos e Informações</h2>
+        <p>Para acompanhar a transposição da NIS 2 em Portugal e preparar‑se para o novo regime, consulte os seguintes recursos:</p>
+        <ul>
+            <li><a href="https://www.cncs.gov.pt/pt/diretiva-sri-2-nis-2/" target="_blank">Centro Nacional de Cibersegurança – Página da Diretiva SRI 2 (NIS 2)</a></li>
+            <li><a href="https://www.portugal.gov.pt/pt/gc24/governo/comunicado-do-conselho-de-ministros" target="_blank">Comunicados do Governo sobre o Regime Jurídico da Cibersegurança</a></li>
+            <li><a href="https://digital-strategy.ec.europa.eu/en/news/commission-calls-19-member-states-fully-transpose-nis2-directive" target="_blank">Comissão Europeia – Parecer sobre a transposição</a></li>
+            <li><a href="https://cyberupgrade.net/blog/compliance-regulations/nis2-directive-regulations-and-implementation-in-portugal/" target="_blank">Artigo da CyberUpgrade sobre a implementação em Portugal</a></li>
+            <li><a href="https://ezine.eversheds-sutherland.com/eu-nis2-directive/portugal" target="_blank">Resumo da Eversheds Sutherland sobre o estado da implementação</a></li>
+        </ul>
+    </section>
+</main>
+<footer>
+    <strong>Notas e citações</strong>
+    <ol>
+        <li id="fn1">Objetivos da Diretiva NIS 2: garantir elevado nível de cibersegurança, reforçar cooperação e obrigar operadores a adoptar medidas e notificar incidentes<!--【675999577618859†L101-L115】-->.</li>
+        <li id="fn2">Diferenças face à NIS 1: expansão do âmbito, categorização de entidades, reforço de medidas de gestão de riscos e de reporte, maior supervisão e responsabilização<!--【675999577618859†L134-L157】-->.</li>
+        <li id="fn3">Prazo de transposição: os Estados‑Membros devem adoptar disposições até 17 de outubro de 2024 e aplicá‑las a partir de 18 de outubro de 2024<!--【675999577618859†L170-L176】-->.</li>
+        <li id="fn4">Proposta de lei do Governo (24 out 2024): amplia o universo regulado, gradua obrigações conforme dimensão e criticidade e cria instrumentos estratégicos e operacionais<!--【943116463515965†L99-L110】-->.</li>
+        <li id="fn5">Consulta pública e convite à participação: alargamento de entidades e poderes do CNCS com preocupação em reduzir burocracia<!--【329703861414323†L72-L98】-->.</li>
+        <li id="fn6">Prolongamento da consulta pública até 31 de dezembro de 2024 e intenção de submeter a lei em Janeiro<!--【863077404856690†L74-L90】-->.</li>
+        <li id="fn7">Aprovação do Regime Jurídico da Cibersegurança (6 fev 2025) e reforço de poderes e obrigações, variando os deveres pela criticidade dos serviços<!--【100119223108519†L95-L137】-->.</li>
+        <li id="fn8">Ciclo temporal previsto para a implementação: publicação da lei em Dezembro de 2025, entrada em vigor a 1 de Março de 2026 e primeiras auditorias em Setembro de 2026<!--【296895541726596†L247-L255】-->.</li>
+        <li id="fn9">Expansão do número de entidades reguladas (7 000–9 000) e categorias essenciais/importantes com respectivos limiares<!--【296895541726596†L265-L283】-->.</li>
+        <li id="fn10">Sanções máximas por tipo de entidade e medidas adicionais associadas<!--【296895541726596†L305-L309】-->.</li>
+        <li id="fn11">Exemplos de impactos sectoriais e novas obrigações específicas<!--【296895541726596†L326-L336】-->.</li>
+        <li id="fn12">Passos recomendados para as organizações se prepararem: confirmar estatuto, reunir dados, realizar análise de lacunas, elaborar SOP e envolver a administração<!--【296895541726596†L347-L364】-->.</li>
+        <li id="fn13">Incerteza no calendário decorrente da dissolução do governo e da necessidade de nova discussão parlamentar<!--【831813808579838†L26-L39】-->.</li>
+        <li id="fn14">Comissão Europeia envia parecer a Portugal por não ter notificado a transposição completa da Diretiva<!--【775102256408275†L64-L88】-->.</li>
+    </ol>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('simulador-form');
+    if (form) {
+        const resultado = document.getElementById('resultado');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const empregados = parseFloat(document.getElementById('empregados').value) || 0;
+            const volume = parseFloat(document.getElementById('volume').value) || 0;
             const sector = document.getElementById('sector').value;
-            const employees = parseInt(document.getElementById('employees').value) || 0;
-            const turnover = parseFloat(document.getElementById('turnover').value) || 0;
-            const balance = parseFloat(document.getElementById('balance').value) || 0;
-            let resultText = "Com base nos dados fornecidos: ";
-            let classification = "Não foi possível determinar";
-
-            const essentialSectors = ["energia", "transportes", "banca", "mercado_financeiro", "saude", "agua_potavel", "aguas_residuais", "infra_digital_critica", "gestao_tic_b2b", "admin_publica_central", "espaco"];
-            const importantSectors = ["servicos_postais", "gestao_residuos", "quimicos", "alimentar", "industria_transformadora", "fornecedores_digitais_gerais", "investigacao", "admin_publica_local"];
-            
-            const isEssentialBySize = employees >= 250 || turnover > 50 || balance > 43;
-            const isImportantBySize = (employees >= 50 && employees < 250) || (turnover >= 10 && turnover <= 50) || (balance >=10 && balance <=43);
-
-
-            if (!sector) {
-                resultText = "Por favor, selecione um setor.";
+            let classificacao = '';
+            // Sectores digitais, infraestruturas digitais, finanças e administração pública estão sempre no âmbito essencial.
+            if (sector === 'digital' || sector === 'infra' || sector === 'financas' || sector === 'administracao') {
+                classificacao = 'Entidade essencial (sector sempre regulado)';
             } else {
-                 if (essentialSectors.includes(sector)) {
-                    if (isEssentialBySize) {
-                        classification = "Potencialmente uma Entidade Essencial (EE).";
-                    } else if (isImportantBySize) {
-                         classification = "Potencialmente uma Entidade Importante (EI), mesmo estando num setor do Anexo I, devido ao tamanho.";
-                    } else {
-                        classification = "Poderá não ser diretamente abrangida pelos critérios de dimensão para EE ou EI, mas verifique exceções (ex: serviços de confiança, DNS, cloud são sempre abrangidos independentemente do tamanho se estiverem no setor 'Infraestruturas Digitais Críticas').";
-                    }
-                } else if (importantSectors.includes(sector)) {
-                     if (isEssentialBySize) { // A large entity in an Annex II sector could be considered Essential by national discretion or other factors
-                        classification = "Potencialmente uma Entidade Essencial (EE) devido ao tamanho, embora o setor seja do Anexo II. Verifique com o CNCS.";
-                    } else if (isImportantBySize) {
-                        classification = "Potencialmente uma Entidade Importante (EI).";
-                    } else {
-                        classification = "Poderá não ser diretamente abrangida pelos critérios de dimensão para EI.";
-                    }
+                // Para sectores críticos como energia, transportes, saúde, manufactura e outros sectores críticos,
+                // a classificação depende da dimensão e do volume de negócios.
+                if (empregados >= 250 || volume >= 50) {
+                    classificacao = 'Entidade essencial';
+                } else if (empregados >= 50 || volume >= 10) {
+                    classificacao = 'Entidade importante';
                 } else {
-                    classification = "O setor selecionado não corresponde diretamente aos Anexos I ou II da NIS2 ou a ferramenta precisa de ser atualizada. Consulte o CNCS.";
+                    classificacao = 'Fora do âmbito da NIS 2';
                 }
-                
-                if (sector === "infra_digital_critica" && (document.getElementById('sector').options[document.getElementById('sector').selectedIndex].text.toLowerCase().includes("dns") || document.getElementById('sector').options[document.getElementById('sector').selectedIndex].text.toLowerCase().includes("cloud") || document.getElementById('sector').options[document.getElementById('sector').selectedIndex].text.toLowerCase().includes("confiança"))) {
-                    classification += " Entidades como serviços DNS, cloud, e de confiança são geralmente consideradas Essenciais independentemente do tamanho.";
-                }
-
-
-                resultText += classification;
             }
-
-            assessmentResult.textContent = resultText;
-            assessmentResult.classList.remove('hidden');
+            // Definir sanções e responsabilidades com base na classificação.
+            let sancao = '';
+            let responsa = '';
+            const classLower = classificacao.toLowerCase();
+            if (classLower.includes('essencial')) {
+                sancao = 'Coima máxima de 10 M€ ou 2% do volume global e possibilidade de suspensão de licenças ou desqualificação de administradores.';
+                responsa = 'Obrigação de aprovar um programa de cibersegurança pelo conselho de administração, implementar medidas de gestão de riscos e notificar incidentes dentro dos prazos legais.';
+            } else if (classLower.includes('importante')) {
+                sancao = 'Coima máxima de 7 M€ ou 1,4% do volume global, com penalidades periódicas e divulgação pública da infracção.';
+                responsa = 'Exige a implementação de medidas de segurança adequadas, a notificação de incidentes significativos e a cooperação com as autoridades de supervisão.';
+            } else {
+                sancao = 'Não aplicável (entidade fora do âmbito da NIS 2).';
+                responsa = 'Não está sujeita às obrigações específicas da NIS 2, mas poderá ter obrigações noutras legislações sectoriais.';
+            }
+            resultado.innerHTML = '<strong>Classificação:</strong> ' + classificacao + '<br><strong>Sanções:</strong> ' + sancao + '<br><strong>Responsabilidades:</strong> ' + responsa;
         });
+    }
 
-        const securityMeasures = [
-            { title: "Gestão de Riscos e Políticas de Segurança", details: "Implementar políticas para minimizar probabilidade e impacto de ameaças." },
-            { title: "Tratamento de Incidentes", details: "Estabelecer procedimentos e planos de resposta a ameaças ativas." },
-            { title: "Continuidade de Negócios", details: "Planos de continuidade, gestão de backups, recuperação de desastres e gestão de crises." },
-            { title: "Segurança da Cadeia de Abastecimento", details: "Abordar relações com fornecedores diretos e prestadores de serviços." },
-            { title: "Segurança na Aquisição, Desenvolvimento e Manutenção", details: "Incluindo tratamento e divulgação de vulnerabilidades." },
-            { title: "Avaliação da Eficácia", details: "Políticas para avaliar a eficácia das medidas de gestão de riscos." },
-            { title: "Higiene Cibernética e Formação", details: "Práticas básicas e formação para gestão e colaboradores." },
-            { title: "Uso de Criptografia", details: "Políticas e procedimentos para uso de criptografia e encriptação." },
-            { title: "Segurança de Recursos Humanos e Controlo de Acessos", details: "Políticas de controlo de acessos e gestão de ativos." },
-            { title: "Autenticação Multifator (MFA) e Comunicações Seguras", details: "Uso de MFA/autenticação contínua, comunicações seguras e sistemas de emergência." }
-        ];
-
-        const accordionContainer = document.getElementById('securityMeasuresAccordion');
-        securityMeasures.forEach((measure, index) => {
-            const item = document.createElement('div');
-            item.classList.add('border', 'border-gray-200', 'rounded-md');
-            
-            const button = document.createElement('button');
-            button.classList.add('w-full', 'p-4', 'text-left', 'bg-sky-100', 'hover:bg-sky-200', 'focus:outline-none', 'flex', 'justify-between', 'items-center', 'transition-colors');
-            button.innerHTML = `
-                <span class="font-medium text-sky-700">${measure.title}</span>
-                <svg class="w-5 h-5 text-sky-600 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            `;
-            
-            const content = document.createElement('div');
-            content.classList.add('accordion-content', 'p-4', 'bg-white', 'text-gray-600');
-            content.textContent = measure.details;
-            
-            button.addEventListener('click', () => {
-                const isOpen = content.style.maxHeight && content.style.maxHeight !== "0px";
-                document.querySelectorAll('.accordion-content').forEach(el => el.style.maxHeight = "0px");
-                document.querySelectorAll('#securityMeasuresAccordion button svg').forEach(svg => svg.style.transform = 'rotate(0deg)');
-                
-                if (!isOpen) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    button.querySelector('svg').style.transform = 'rotate(180deg)';
-                } else {
-                    content.style.maxHeight = "0px";
-                    button.querySelector('svg').style.transform = 'rotate(0deg)';
-                }
-            });
-            
-            item.appendChild(button);
-            item.appendChild(content);
-            accordionContainer.appendChild(item);
-        });
-
-        const notificationTimelineCtx = document.getElementById('notificationTimelineChart').getContext('2d');
-        new Chart(notificationTimelineCtx, {
+    // Gráfico de barras para o aumento de entidades reguladas
+    const chartEl = document.getElementById('chartEntidades');
+    if (chartEl && typeof Chart !== 'undefined') {
+        const ctx = chartEl.getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Alerta Precoce', 'Relatório Completo', 'Relatório Final'],
+                labels: ['Antes da NIS 2 (aprox.)', 'Com NIS 2 (estimativa)'],
                 datasets: [{
-                    label: 'Prazo de Notificação (após conhecimento)',
-                    data: [24, 72, 720], // 720 hours = 30 days for approximation
-                    backgroundColor: [
-                        'rgba(255, 159, 64, 0.7)',
-                        'rgba(255, 205, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
+                    label: 'Número de Entidades Reguladas',
+                    data: [1000, 8000],
+                    backgroundColor: ['#f0ad4e','#5bc0de'],
+                    borderColor: ['#e0993a','#4aa0c7'],
                     borderWidth: 1
                 }]
             },
             options: {
-                indexAxis: 'y',
                 responsive: true,
-                maintainAspectRatio: false,
+                aspectRatio: 2,
                 scales: {
-                    x: { 
-                        beginAtZero: true, 
-                        title: { display: true, text: 'Horas (aproximado para Relatório Final)' },
-                        ticks: {
-                            callback: function(value, index, values) {
-                                if (value === 24) return '24 Horas';
-                                if (value === 72) return '72 Horas';
-                                if (value === 720) return '1 Mês (aprox. 720h)';
-                                return value;
-                            }
-                        }
+                    y: {
+                        beginAtZero: true,
+                        max: 9000,
+                        title: { display: true, text: 'Número de Entidades' }
+                    },
+                    x: {
+                        title: { display: false }
                     }
                 },
                 plugins: {
-                    title: { display: true, text: 'Prazos de Notificação de Incidentes Significativos' },
-                     tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                let value = context.parsed.x;
-                                if (value === 24) label += '24 Horas';
-                                else if (value === 72) label += '72 Horas';
-                                else if (value === 720) label += '1 Mês (aprox. 720 Horas)';
-                                else label += value + ' Horas';
-                                return label;
-                            }
-                        }
+                    legend: { display: false },
+                    title: { display: true, text: 'Aumento Estimado de Entidades Reguladas' }
+                }
+            }
+        });
+    }
+
+    // Gráfico de donut para a distribuição estimada das entidades por categoria
+    const distEl = document.getElementById('chartDistribuicao');
+    if (distEl && typeof Chart !== 'undefined') {
+        const ctxDist = distEl.getContext('2d');
+        new Chart(ctxDist, {
+            type: 'doughnut',
+            data: {
+                labels: ['Entidades Essenciais', 'Entidades Importantes', 'Fora do âmbito'],
+                datasets: [{
+                    data: [45, 45, 10],
+                    backgroundColor: ['#5bc0de','#4cae4c','#d9534f'],
+                    borderColor: ['#4aa0c7','#3e8e3e','#c9302c'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribuição Estimada por Categoria'
                     }
                 }
             }
         });
+    }
 
-        const sanctionsTabs = document.querySelectorAll('.tab-button');
-        const sanctionsContent = document.getElementById('sanctionsContent');
-
-        const sanctionsData = {
-            ee: {
-                title: "Entidades Essenciais (EE)",
-                fine: "Até €10.000.000 ou 2% do volume de negócios global anual (o que for superior).",
-                other: "Suspensão de licenças, inibição de diretores, ordens corretivas."
+    // Gráfico de barras para comparar as coimas máximas
+    const sanctionsEl = document.getElementById('chartSanctions');
+    if (sanctionsEl && typeof Chart !== 'undefined') {
+        const ctxSan = sanctionsEl.getContext('2d');
+        new Chart(ctxSan, {
+            type: 'bar',
+            data: {
+                labels: ['Entidades Essenciais', 'Entidades Importantes', 'Infrações Processuais'],
+                datasets: [{
+                    label: 'Coima Máxima (M€)',
+                    data: [10, 7, 2],
+                    backgroundColor: ['#5bc0de','#4cae4c','#f0ad4e'],
+                    borderColor: ['#4aa0c7','#3e8e3e','#e0993a'],
+                    borderWidth: 1
+                }]
             },
-            ei: {
-                title: "Entidades Importantes (EI)",
-                fine: "Até €7.000.000 ou 1,4% do volume de negócios global anual (o que for superior).",
-                other: "Penalidades periódicas, nomeação pública, ordens corretivas."
+            options: {
+                responsive: true,
+                aspectRatio: 2,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10,
+                        title: {
+                            display: true,
+                            text: 'Coima Máxima (M€)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Comparação das Coimas Máximas'
+                    }
+                }
             }
-        };
-
-        function displaySanctions(type) {
-            const data = sanctionsData[type];
-            sanctionsContent.innerHTML = `
-                <div class="p-4 border border-sky-200 rounded-md bg-sky-50">
-                    <h4 class="font-semibold text-sky-700 text-lg mb-2">${data.title}</h4>
-                    <p class="text-gray-700 mb-1"><span class="font-medium">Coima Máxima:</span> ${data.fine}</p>
-                    <p class="text-gray-700"><span class="font-medium">Outras Medidas:</span> ${data.other}</p>
-                </div>
-            `;
-        }
-
-        sanctionsTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                sanctionsTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                displaySanctions(tab.dataset.type);
-            });
         });
-        displaySanctions('ee'); // Initial display
-
-    </script>
+    }
+});
+</script>
 </body>
 </html>
